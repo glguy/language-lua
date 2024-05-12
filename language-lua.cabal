@@ -1,94 +1,94 @@
-Name:                language-lua
+cabal-version:      3.4
+name:               language-lua
+description:        Lua 5.3 lexer, parser and pretty-printer.
+version:            0.11.0.1
+synopsis:           Lua parser and pretty-printer
+homepage:           http://github.com/glguy/language-lua
+bug-reports:        http://github.com/glguy/language-lua/issues
+license:            BSD-3-Clause
+license-file:       LICENSE
+author:             Ömer Sinan Ağacan, Eric Mertens
+maintainer:         Eric Mertens <emertens@gmail.com>
+category:           Language
+build-type:         Simple
+stability:          Experimental
+tested-with: GHC ==9.4.8 || ==9.6.5 || ==9.8.2
 
-Description:
-    Lua 5.3 lexer, parser and pretty-printer.
+extra-source-files:
+  CHANGELOG.md
+  lua-5.3.1-tests/*.lua
+  README.md
+  src/Text/PrettyPrint/LICENSE
+  tests/numbers
+  tests/string-literal-roundtrip.lua
+  tests/strings
 
-Version:             0.11.0.1
-Synopsis:            Lua parser and pretty-printer
-Homepage:            http://github.com/glguy/language-lua
-Bug-reports:         http://github.com/glguy/language-lua/issues
-License:             BSD3
-License-file:        LICENSE
-Author:              Ömer Sinan Ağacan, Eric Mertens
-Maintainer:          Eric Mertens <emertens@gmail.com>
-Category:            Language
-Build-type:          Simple
-Stability:           Experimental
-Cabal-version:       >= 1.10
-Tested-with:         GHC==7.8.4, GHC==7.10.3, GHC==8.0.2, GHC==8.4.4, GHC==8.6.5, GHC==8.8.2
+source-repository head
+  type:     git
+  location: git://github.com/glguy/language-lua.git
 
-Extra-source-files:  src/Text/PrettyPrint/LICENSE
-                     tests/numbers
-                     tests/strings
-                     tests/string-literal-roundtrip.lua
-                     lua-5.3.1-tests/*.lua
-                     README.md
-                     CHANGELOG.md
+library
+  hs-source-dirs:   src
+  default-language: Haskell2010
+  exposed-modules:
+    Language.Lua
+    Language.Lua.Annotated
+    Language.Lua.Annotated.Lexer
+    Language.Lua.Annotated.Parser
+    Language.Lua.Annotated.Simplify
+    Language.Lua.Annotated.Syntax
+    Language.Lua.Parser
+    Language.Lua.PrettyPrinter
+    Language.Lua.StringLiteral
+    Language.Lua.Syntax
+    Language.Lua.Token
 
-Source-repository head
-  Type:              git
-  Location:          git://github.com/glguy/language-lua.git
+  other-modules:
+    Language.Lua.LexerUtils
+    Language.Lua.Utils
+    Text.PrettyPrint.Leijen
 
-Library
-  Hs-source-dirs:    src
-  Default-language:  Haskell2010
+  build-depends:
+      alex-tools  >=0.6  && <0.7
+    , array       >=0.4  && <0.6
+    , base        >=4.5  && <4.21
+    , bytestring  >=0.10 && <0.12
+    , deepseq
+    , text        >=1.2  && <2.1
 
-  Exposed-modules:   Language.Lua
-                     Language.Lua.Token
-                     Language.Lua.StringLiteral
-                     Language.Lua.Syntax
-                     Language.Lua.Parser
-                     Language.Lua.PrettyPrinter
-                     Language.Lua.Annotated
-                     Language.Lua.Annotated.Syntax
-                     Language.Lua.Annotated.Parser
-                     Language.Lua.Annotated.Lexer
-                     Language.Lua.Annotated.Simplify
+  build-tool-depends:      alex:alex >=0, happy:happy >=0
+  ghc-options:      -Wall
 
-  Other-modules:     Text.PrettyPrint.Leijen,
-                     Language.Lua.LexerUtils,
-                     Language.Lua.Utils
+test-suite tests
+  type:             exitcode-stdio-1.0
+  default-language: Haskell2010
+  hs-source-dirs:   tests
+  main-is:          Main.hs
+  build-depends:
+      base              >=4.5 && <4.19
+    , bytestring
+    , deepseq
+    , directory
+    , filepath
+    , language-lua
+    , QuickCheck
+    , tasty
+    , tasty-hunit
+    , tasty-quickcheck
+    , text
 
-  Build-depends:     base >= 4.5 && < 4.19,
-                     deepseq,
-                     array >= 0.4 && < 0.6,
-                     bytestring >= 0.10 && < 0.12,
-                     text >= 1.2 && < 2.1,
-                     alex-tools >= 0.6 && < 0.7
+  ghc-options:      -Wall
 
-  Build-tools:       alex, happy
-
-  ghc-options:       -Wall
-
-Test-Suite tests
-  Type:              exitcode-stdio-1.0
-  Default-language:  Haskell2010
-  Hs-source-dirs:    tests
-  Main-is:           Main.hs
-  Build-depends:     base >= 4.5 && < 4.19,
-                     deepseq,
-                     directory,
-                     filepath,
-                     language-lua,
-                     bytestring,
-                     QuickCheck,
-                     tasty,
-                     tasty-hunit,
-                     text,
-                     tasty-quickcheck
-
-  ghc-options:       -Wall
-
-Benchmark bench
-  type:              exitcode-stdio-1.0
-  default-language:  Haskell2010
-  main-is:           Main.hs
-  hs-source-dirs:    bench
-  ghc-options:       -Wall
-
-  build-depends:     base,
-                     criterion,
-                     directory,
-                     filepath,
-                     text,
-                     language-lua
+benchmark bench
+  type:             exitcode-stdio-1.0
+  default-language: Haskell2010
+  main-is:          Main.hs
+  hs-source-dirs:   bench
+  ghc-options:      -Wall
+  build-depends:
+      base
+    , criterion
+    , directory
+    , filepath
+    , language-lua
+    , text
