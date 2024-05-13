@@ -249,11 +249,17 @@ instance LPretty Stat where
     pprint (FunAssign name body) = pprintFunction (Just (pprint name)) body
     pprint (LocalFunAssign name body) = text "local" <+> pprintFunction (Just (pprint name)) body
     pprint (LocalAssign names exps)
-        = text "local" <+> intercalate comma (map pprint names) <+> exps'
+        = text "local" <+> intercalate comma (map pprintAttname names) <+> exps'
       where exps' = case exps of
                       Nothing -> empty
                       Just es -> equals </> intercalate comma (map pprint es)
+            pprintAttname (n, Nothing) = pprint n
+            pprintAttname (n, Just a) = pprint n <+> char '<' <> pprint a <> char '>'
     pprint EmptyStat = text ";"
+
+instance LPretty Attrib where
+  pprint AttribClose = text "close"
+  pprint AttribConst = text "const"
 
 instance LPretty Name where
   pprint (Name n) = text (Text.unpack n)

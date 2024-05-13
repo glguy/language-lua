@@ -26,8 +26,12 @@ sStat (A.ForRange _ n e1 e2 oe3 b) =
 sStat (A.ForIn _ ns es b) = ForIn (map sName ns) (map sExp es) (sBlock b)
 sStat (A.FunAssign _ fn fb) = FunAssign (sFunName fn) (sFunBody fb)
 sStat (A.LocalFunAssign _ n fb) = LocalFunAssign (sName n) (sFunBody fb)
-sStat (A.LocalAssign _ ns es) = LocalAssign (map sName ns) (fmap (map sExp) es)
+sStat (A.LocalAssign _ ns es) = LocalAssign [(sName n, fmap sAttrib a) | (n,a) <- ns] (fmap (map sExp) es)
 sStat (A.EmptyStat _) = EmptyStat
+
+sAttrib :: A.Attrib a -> Attrib
+sAttrib (A.AttribClose _) = AttribClose
+sAttrib (A.AttribConst _) = AttribConst
 
 sExp :: A.Exp a -> Exp
 sExp (A.Nil _) = Nil

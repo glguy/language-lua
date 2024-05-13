@@ -17,6 +17,9 @@ import           Language.Lua.Utils(NumberType(..))
 newtype Name = Name Text
   deriving (Show, Eq, Data, Typeable, Generic)
 
+data Attrib = AttribClose | AttribConst
+  deriving (Show, Eq, Data, Typeable, Generic)
+
 data Stat
     = Assign [Var] [Exp] -- ^var1, var2 .. = exp1, exp2 ..
     | FunCall FunCall -- ^function call
@@ -31,7 +34,7 @@ data Stat
     | ForIn [Name] [Exp] Block -- ^for x in .. do .. end
     | FunAssign FunName FunBody -- ^function \<var\> (..) .. end
     | LocalFunAssign Name FunBody -- ^local function \<var\> (..) .. end
-    | LocalAssign [Name] (Maybe [Exp]) -- ^local var1, var2 .. = exp1, exp2 ..
+    | LocalAssign [(Name, Maybe Attrib)] (Maybe [Exp]) -- ^local var1, var2 .. = exp1, exp2 ..
     | EmptyStat -- ^/;/
     deriving (Show, Eq, Data, Typeable, Generic)
 
@@ -96,6 +99,7 @@ data FunArg
     deriving (Show, Eq, Data, Typeable, Generic)
 
 instance NFData Name
+instance NFData Attrib
 instance NFData Stat
 instance NFData Exp
 instance NFData Var

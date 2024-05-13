@@ -147,7 +147,7 @@ stat ::                                                   { Stat SourceRange    
   | '::' name '::'                                        { at ($1,$3) Label $2               }
   | 'break'                                               { at $1 Break                       }
   | 'goto' name                                           { at ($1,$2) Goto $2                }
-  | 'local' namelist opt(assign)                          { at ($1,($2,$3)) LocalAssign $2 $3 }
+  | 'local' attnamelist opt(assign)                       { at ($1,($2,$3)) LocalAssign $2 $3 }
 
   ------- block structures -------------------------------
   | 'function' funcname funcbody 'end'                    { at ($1,$4)  FunAssign $2 $3         }
@@ -174,9 +174,14 @@ else   : 'else' block { $2 }
 step   : ',' exp { $2 }
 assign : '=' explist { $2 }
 
-varlist  : sepBy1(var,  ',') { $1 }
-explist  : sepBy1(exp,  ',') { $1 }
-namelist : sepBy1(name, ',') { $1 }
+varlist     : sepBy1(var,     ',') { $1 }
+explist     : sepBy1(exp,     ',') { $1 }
+namelist    : sepBy1(name,    ',') { $1 }
+attnamelist : sepBy1(attname, ',') { $1 }
+
+attname ::                    { (Name SourceRange, Maybe (Attrib SourceRange)) }
+  : name                      { ($1, Nothing)                                  }
+  | name '<' name '>'         {% attrname $1 $3                                }
 
 prefixexp ::                  { PrefixExp SourceRange }
   : var                       { at $1 PEVar $1        }
@@ -312,6 +317,12 @@ noEndP :: Lexeme Token -> Either (SourceRange,String) a
 noEndP Lexeme { lexemeRange = pos, lexemeToken = t } =
   Left (pos, "unterminated " ++ show t)
 
+attrname :: Name a -> Name a -> Either (a,String) (Name a, Maybe (Attrib a))
+attrname x (Name a y)
+  | y == Text.pack "close" = Right (x, Just (AttribClose a))
+  | y == Text.pack "const" = Right (x, Just (AttribConst a))
+  | otherwise              = Left  (a, "unknown attribute")
+
 -- | Runs Lua lexer before parsing. Use @parseNamedText stat "name"@ to parse
 -- statements, and @parseText exp "name"@ to parse expressions.
 parseNamedText ::
@@ -383,11 +394,6 @@ instance HasRange a => HasRange (FunBody a)     where getRange = getRange . ann
 instance HasRange a => HasRange (FunCall a)     where getRange = getRange . ann
 instance HasRange a => HasRange (FunArg a)      where getRange = getRange . ann
 instance HasRange a => HasRange (Name a)        where getRange = getRange . ann
-
-
-
-
-
-
+instance HasRange a => HasRange (Attrib a)      where getRange = getRange . ann
 
 }

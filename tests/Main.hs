@@ -422,3 +422,7 @@ instance Arbitrary FunArg where
 instance Arbitrary Name where
   arbitrary = return (Name "a")
   shrink = const []
+
+instance Arbitrary Attrib where
+  arbitrary = oneof [return AttribClose, return AttribConst]
+  shrink = const []

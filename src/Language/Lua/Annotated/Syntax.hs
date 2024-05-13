@@ -17,6 +17,11 @@ import           Language.Lua.Utils(NumberType(..))
 
 data Name a = Name a Text deriving (Show, Eq, Functor, Data, Typeable, Generic)
 
+data Attrib a
+    = AttribConst a -- ^ @<const>@
+    | AttribClose a -- ^ @<close>@
+    deriving (Show, Eq, Functor, Data, Typeable, Generic)
+
 data Stat a
     = Assign a [Var a] [Exp a] -- ^var1, var2 .. = exp1, exp2 ..
     | FunCall a (FunCall a) -- ^function call
@@ -31,7 +36,7 @@ data Stat a
     | ForIn a [Name a] [Exp a] (Block a) -- ^for x in .. do .. end
     | FunAssign a (FunName a) (FunBody a) -- ^function \<var\> (..) .. end
     | LocalFunAssign a (Name a) (FunBody a) -- ^local function \<var\> (..) .. end
-    | LocalAssign a [Name a] (Maybe [Exp a]) -- ^local var1, var2 .. = exp1, exp2 ..
+    | LocalAssign a [(Name a, Maybe (Attrib a))] (Maybe [Exp a]) -- ^local var1, var2 .. = exp1, exp2 ..
     | EmptyStat a -- ^/;/
     deriving (Show, Eq, Functor, Data, Typeable, Generic)
 
@@ -285,11 +290,18 @@ instance Annotated FunArg where
     amap f (TableArg a x1) = TableArg (f a) x1
     amap f (StringArg a x1) = StringArg (f a) x1
 
+instance Annotated Attrib where
+    ann (AttribClose a) = a
+    ann (AttribConst a) = a
+    amap f (AttribClose a) = AttribClose (f a)
+    amap f (AttribConst a) = AttribConst (f a)
+
 instance Annotated Name where
     ann (Name a _) = a
     amap f (Name a x1) = Name (f a) x1
 
 instance NFData a => NFData (Name a)
+instance NFData a => NFData (Attrib a)
 instance NFData a => NFData (Stat a)
 instance NFData a => NFData (Exp a)
 instance NFData a => NFData (Var a)
