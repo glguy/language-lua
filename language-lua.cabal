@@ -49,11 +49,11 @@ Library
                      Language.Lua.LexerUtils,
                      Language.Lua.Utils
 
-  Build-depends:     base >= 4.5 && < 4.19,
+  Build-depends:     base >= 4.5 && < 4.20,
                      deepseq,
                      array >= 0.4 && < 0.6,
-                     bytestring >= 0.10 && < 0.12,
-                     text >= 1.2 && < 2.1,
+                     bytestring >= 0.10 && < 0.13,
+                     text >= 1.2 && < 2.2,
                      alex-tools >= 0.6 && < 0.7
 
   Build-tools:       alex, happy
@@ -65,7 +65,7 @@ Test-Suite tests
   Default-language:  Haskell2010
   Hs-source-dirs:    tests
   Main-is:           Main.hs
-  Build-depends:     base >= 4.5 && < 4.19,
+  Build-depends:     base >= 4.5 && < 4.20,
                      deepseq,
                      directory,
                      filepath,
