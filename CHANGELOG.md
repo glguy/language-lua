@@ -1,5 +1,9 @@
 ## Changelog
 
+#### 0.11.0.2
+
+- Update to work with newer packages
+
 #### 0.11.0.1
 
 - Update to work with newer base

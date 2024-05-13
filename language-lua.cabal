@@ -1,7 +1,7 @@
 cabal-version:      3.4
 name:               language-lua
 description:        Lua 5.3 lexer, parser and pretty-printer.
-version:            0.11.0.1
+version:            0.11.0.2
 synopsis:           Lua parser and pretty-printer
 homepage:           http://github.com/glguy/language-lua
 bug-reports:        http://github.com/glguy/language-lua/issues
