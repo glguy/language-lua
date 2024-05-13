@@ -1,5 +1,9 @@
 ## Changelog
 
+#### 0.12.0.0
+
+- Add support for Lua 5.4's close and const attributes
+
 #### 0.11.0.2
 
 - Update to work with newer packages
